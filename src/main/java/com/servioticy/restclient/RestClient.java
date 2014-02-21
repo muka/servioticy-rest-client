@@ -14,6 +14,7 @@
  * limitations under the License.
  ******************************************************************************/ package com.servioticy.restclient;
 
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
@@ -34,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * @author Álvaro Villalba Navarro <alvaro.villalba@bsc.es>
  * 
  */
-public class RestClient {
+public class RestClient implements Serializable{
 	final static protected Logger logger = LoggerFactory.getLogger(RestClient.class);
 	
 	public final static int POST = 0;
