@@ -15,11 +15,13 @@
  ******************************************************************************/ 
 package com.servioticy.restclient;
 
+import java.io.Serializable;
+
 /**
  * @author Álvaro Villalba Navarro <alvaro.villalba@bsc.es>
  * 
  */
-public class RestResponse {
+public class RestResponse implements Serializable {
 	private String response;
 	private int httpCode;
 	
