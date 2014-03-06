@@ -118,7 +118,7 @@ public class RestClient implements Serializable{
 				logger.error(e.getMessage());
 				throw new RestClientException(e.getMessage());
 			} 
-			logger.error("'" + responseBody + "' in url '" + url + "'");			
+			logger.warn("'" + responseBody + "' in url '" + url + "'");			
 			throw new RestClientErrorCodeException(responseBody, rr);
 		}
 
