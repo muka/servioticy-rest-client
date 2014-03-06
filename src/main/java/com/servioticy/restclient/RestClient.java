@@ -26,7 +26,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +36,11 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class RestClient implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	final static protected Logger logger = LoggerFactory.getLogger(RestClient.class);
 	
 	public final static int POST = 0;
@@ -43,7 +48,7 @@ public class RestClient implements Serializable{
 	public final static int GET = 2;
 	
 	public RestResponse restRequest(String url, String body, int method, Map<String, String> headers) throws RestClientException, RestClientErrorCodeException{
-		HttpClient httpClient = new DefaultHttpClient();
+		HttpClient httpClient = HttpClientBuilder.create().build();
 		HttpRequestBase httpMethod;
 		StringEntity input;
 		
@@ -117,8 +122,8 @@ public class RestClient implements Serializable{
 			} catch (Exception e) {
 				logger.error(e.getMessage());
 				throw new RestClientException(e.getMessage());
-			} 
-			logger.error("'" + responseBody + "' in url '" + url + "'");			
+			}
+			logger.warn("'" + responseBody + "' in url '" + url + "'");			
 			throw new RestClientErrorCodeException(responseBody, rr);
 		}
 

@@ -19,6 +19,10 @@
  * 
  */
 public class RestClientErrorCodeException extends Exception {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private RestResponse restResponse;
 	
 	public RestClientErrorCodeException() {
