@@ -20,6 +20,11 @@ package com.servioticy.restclient;
  * 
  */
 public class RestClientException extends Exception {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public RestClientException() {
 		super();
 	}
