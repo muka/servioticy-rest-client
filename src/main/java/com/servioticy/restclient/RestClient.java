@@ -26,7 +26,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +48,7 @@ public class RestClient implements Serializable{
 	public final static int GET = 2;
 	
 	public RestResponse restRequest(String url, String body, int method, Map<String, String> headers) throws RestClientException, RestClientErrorCodeException{
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = new DefaultHttpClient();
 		HttpRequestBase httpMethod;
 		StringEntity input;
 		
