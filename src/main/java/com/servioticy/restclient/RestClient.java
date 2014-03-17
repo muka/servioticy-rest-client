@@ -115,16 +115,8 @@ public class RestClient implements Serializable{
 			throw new RestClientException(e.getMessage());
 		}
 		if(statusCode < 200 || statusCode >= 300){
-			String responseBody;
-			try {
-				responseBody = IOUtils.toString(response.getEntity().getContent(), "UTF-8");
-				response.getEntity().getContent().close();
-			} catch (Exception e) {
-				logger.error(e.getMessage());
-				throw new RestClientException(e.getMessage());
-			}
-			logger.warn("'" + responseBody + "' in url '" + url + "'");			
-			throw new RestClientErrorCodeException(responseBody, rr);
+			logger.warn("'" + rr.getResponse() + "' in url '" + url + "'");
+			throw new RestClientErrorCodeException(rr.getResponse(), rr);
 		}
 
 		return rr;
