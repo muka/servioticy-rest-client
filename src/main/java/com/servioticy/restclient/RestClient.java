@@ -15,20 +15,20 @@
  ******************************************************************************/
 package com.servioticy.restclient;
 
+import java.io.IOException;
 import java.io.Serializable;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.commons.io.IOUtils;
+import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
+import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,15 +41,24 @@ public class RestClient implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+    private CloseableHttpAsyncClient httpClient;
 
 	final static protected Logger logger = LoggerFactory.getLogger(RestClient.class);
 	
 	public final static int POST = 0;
 	public final static int PUT = 1;
 	public final static int GET = 2;
+
+    public RestClient(){
+        this.httpClient = HttpAsyncClients.createDefault();
+        this.httpClient.start();
+    }
+
+    public void close() throws IOException {
+        this.httpClient.close();
+    }
 	
-	public RestResponse restRequest(String url, String body, int method, Map<String, String> headers) throws RestClientException, RestClientErrorCodeException{
-		HttpClient httpClient = new DefaultHttpClient();
+	public FutureRestResponse restRequest(String url, String body, int method, Map<String, String> headers) throws RestClientException, RestClientErrorCodeException{
 		HttpRequestBase httpMethod;
 		StringEntity input;
 		
@@ -91,34 +100,16 @@ public class RestClient implements Serializable{
 			}
 		}
 		
-		HttpResponse response;
+		Future<HttpResponse> response;
 		try {
-			response = httpClient.execute(httpMethod);
+			response = httpClient.execute(httpMethod, null);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			throw new RestClientException(e.getMessage());
 		}
 		
 		// TODO Check the errors nicely
-		int statusCode = response.getStatusLine().getStatusCode();
-		RestResponse rr;
-		try {
-			if(response.getEntity() == null){
-				rr = new RestResponse(null, statusCode);
-			}else{
-				StringWriter writer = new StringWriter();
-				IOUtils.copy(response.getEntity().getContent(), writer, "utf-8");
-				rr = new RestResponse(writer.toString(), statusCode);
-				response.getEntity().getContent().close();
-			}
-		}catch (Exception e) {
-			logger.error(e.getMessage());
-			throw new RestClientException(e.getMessage());
-		}
-		if(statusCode < 200 || statusCode >= 300){
-			logger.warn("'" + rr.getResponse() + "' in url '" + url + "'");
-			throw new RestClientErrorCodeException(rr.getResponse(), rr);
-		}
+		FutureRestResponse rr = new FutureRestResponse(response);
 
 		return rr;
 		

@@ -33,7 +33,7 @@ public class RestResponse implements Serializable {
 		this.setResponse(response);
 		this.setHttpCode(httpCode);
 	}
-	
+
 	public int getHttpCode() {
 		return httpCode;
 	}
