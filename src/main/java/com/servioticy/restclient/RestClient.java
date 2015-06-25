@@ -22,10 +22,7 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
@@ -48,6 +45,7 @@ public class RestClient implements Serializable{
 	public final static int POST = 0;
 	public final static int PUT = 1;
 	public final static int GET = 2;
+	public final static int DELETE = 3;
 
     public RestClient(){
         this.httpClient = HttpAsyncClients.createDefault();
@@ -86,6 +84,9 @@ public class RestClient implements Serializable{
 				HttpPut httpPut = new HttpPut(url);
 				httpPut.setEntity(input);
 				httpMethod = httpPut;
+				break;
+			case DELETE:
+				httpMethod = new HttpDelete(url);
 				break;
 			case GET:
 				httpMethod = new HttpGet(url);
